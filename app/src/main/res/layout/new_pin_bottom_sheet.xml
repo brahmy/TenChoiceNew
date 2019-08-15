@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_alignParentTop="true">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Create New PIN">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="6"
+                android:imeOptions="actionNext"
+                android:id="@+id/id_forgot_pin_bottom_sheet_create_pin_editText"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ReCreate New PIN">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="6"
+                android:imeOptions="actionDone"
+                android:id="@+id/id_forgot_pin_bottom_sheet_recreate_pin_editText"/>
+        </android.support.design.widget.TextInputLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change"
+            android:textAllCaps="false"
+            android:layout_margin="@dimen/margin_ten"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            android:background="@drawable/button_border"
+            android:textSize="@dimen/button_size"
+            android:id="@+id/id_new_pin_change_btn" />
+
+    </LinearLayout>
+
+</RelativeLayout>
