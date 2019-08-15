@@ -52,8 +52,7 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
         dialogProgressBar.showDialog();
 
-//        volleyPaymentStatus();
-        getAmountListRequest();
+        volleyPaymentStatus();
 
 
         onClickListener();
@@ -129,6 +128,7 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
                     } else {
                         getAmountListRequest();
+
 
                     }
                 } catch (JSONException e) {

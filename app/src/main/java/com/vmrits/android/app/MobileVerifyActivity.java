@@ -394,25 +394,29 @@ public class MobileVerifyActivity extends AppCompatActivity {
             public void onResponse(String response) {
 //                generateOTP();
 //                OTP = randomOTP();
-                dialogProgressBar.hideDialog();
                 System.out.println("verify_number_response:" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String string_response = jsonObject.getString("message");
                     if (string_response.equalsIgnoreCase("not exist")) {
                         isExist = false;
+                        dialogProgressBar.hideDialog();
 
-                        linearLayout_verify_otp.setVisibility(View.VISIBLE);
-                        button_otp_verify.setVisibility(View.VISIBLE);
+/*
+                        linearLayout_verify_otp.setVisibility(View.GONE);
+                        button_otp_verify.setVisibility(View.GONE);
 
                         linearLayout_mobile_number.setVisibility(View.GONE);
                         button_submit.setVisibility(View.GONE);
+*/
 
                         Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
                         intent.putExtra("mobile_number", string_mobile_number);
                         startActivity(intent);
 
                     } else {
+                        dialogProgressBar.hideDialog();
+
                         loginSessionManager.createLoginSession(string_mobile_number);
                         isExist = true;
                         linearLayout_verify_otp.setVisibility(View.VISIBLE);
