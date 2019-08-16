@@ -72,12 +72,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Enter PIN"
+                        app:passwordToggleEnabled="true"
                         android:textColorHint="@color/purple">
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
+                            android:inputType="numberPassword"
                             android:maxLength="6"
                             android:id="@+id/id_mobile_verify_OTP_edt" />
                     </android.support.design.widget.TextInputLayout>

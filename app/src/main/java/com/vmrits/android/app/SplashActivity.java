@@ -48,14 +48,16 @@ public class SplashActivity extends Activity {
             String mobile_number = user.get(LoginSessionManager.KEY_MOBILE_NUMBER);
 
             Intent intent = new Intent(SplashActivity.this, MobileVerifyActivity.class);
-            intent.putExtra("mobile_number", mobile_number);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.putExtra("mobile_number", mobile_number);
             startActivity(intent);
 
         } else {
             /*Intent intent = new Intent(SplashActivity.this, MobileVerifyActivity.class);
             startActivity(intent);*/
             Intent intent = new Intent(SplashActivity.this, MobileVerifyActivity.class);
-//            intent.putExtra("mobile_number", "9494604760");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //            intent.putExtra("mobile_number", "9494604760");
             startActivity(intent);
         }
     }

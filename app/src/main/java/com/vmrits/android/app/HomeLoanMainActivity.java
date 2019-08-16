@@ -1,16 +1,23 @@
 package com.vmrits.android.app;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeLoanMainActivity extends AppCompatActivity {
     private RecyclerView recyclerView_home_loan_main;
@@ -30,11 +39,13 @@ public class HomeLoanMainActivity extends AppCompatActivity {
     private Context context = HomeLoanMainActivity.this;
     protected DialogProgressBar dialogProgressBar;
     private String string_mobile_number;
+    private LoginSessionManager loginSessionManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_loan_main);
+        loginSessionManager = new LoginSessionManager(context);
         homeLoanPOJOArrayList = new ArrayList<>();
         dialogProgressBar = new DialogProgressBar(context);
         Intent intent = getIntent();
@@ -208,8 +219,49 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
                 Toast.makeText(context, "Sorry! Server Error!!", Toast.LENGTH_LONG).show();
             }
-        });
+        })/*{
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params=new HashMap<>();
+                params.put("phone",string_mobile_number);
+                return params;
+            }
+        }*/;
         AppController.getInstance().addToRequestQueue(stringRequest, "amount_list");
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.id_menu_logout:
+                if(loginSessionManager.isLoggedIn()){
+                    loginSessionManager.logoutUser();
+                }else{
+                    Toast.makeText(context,"You are not logged in!!",Toast.LENGTH_LONG).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        HomeLoanMainActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
 }

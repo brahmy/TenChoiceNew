@@ -71,8 +71,8 @@ public class HomeLoanActivity extends AppCompatActivity {
 */
 
     private void initializeAdapter() {
-        HomeLoadAdapter homeLoadAdapter = new HomeLoadAdapter(context, homeLoanPOJOArrayList);
-        gridView_home_loan.setAdapter(homeLoadAdapter);
+//        HomeLoadAdapter homeLoadAdapter = new HomeLoadAdapter(context, homeLoanPOJOArrayList);
+//        gridView_home_loan.setAdapter(homeLoadAdapter);
     }
 
     private void onClickViews() {

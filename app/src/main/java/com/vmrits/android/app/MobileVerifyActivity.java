@@ -1,6 +1,7 @@
 package com.vmrits.android.app;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -69,10 +71,28 @@ public class MobileVerifyActivity extends AppCompatActivity {
         linearLayout_mobile_number = findViewById(R.id.id_mobile_verify_LL);
         linearLayout_verify_otp = findViewById(R.id.id_mobile_verify_otp_LL);
         textView_forgot_pin=findViewById(R.id.id_mobile_verify_forgot_pin_textView);
+
         textView_forgot_pin.setVisibility(View.GONE);
 
-        linearLayout_verify_otp.setVisibility(View.GONE);
-        button_otp_verify.setVisibility(View.GONE);
+        if(loginSessionManager.isLoggedIn()) {
+            // get user data from session
+            HashMap<String, String> user = loginSessionManager.getUserDetails();
+            // number
+            string_mobile_number = user.get(LoginSessionManager.KEY_MOBILE_NUMBER);
+
+            linearLayout_verify_otp.setVisibility(View.VISIBLE);
+            button_otp_verify.setVisibility(View.VISIBLE);
+            button_submit.setVisibility(View.GONE);
+            linearLayout_mobile_number.setVisibility(View.GONE);
+
+        }else{
+            linearLayout_verify_otp.setVisibility(View.GONE);
+            button_otp_verify.setVisibility(View.GONE);
+            button_submit.setVisibility(View.VISIBLE);
+            linearLayout_mobile_number.setVisibility(View.VISIBLE);
+
+
+        }
 
         onClickViews();
     }
@@ -293,11 +313,12 @@ public class MobileVerifyActivity extends AppCompatActivity {
                     JSONObject jsonObject=new JSONObject(response);
                     String response_status=jsonObject.getString("message");
                     if(response_status.contains("mpin is valid")){
-                            if(isExist) {
+//                            if(isExist) {
                                 Intent intent = new Intent(MobileVerifyActivity.this, HomeLoanMainActivity.class);
                                 intent.putExtra("mobile_number", string_mobile_number);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                            }
+//                            }
                     }else{
                         textView_forgot_pin.setVisibility(View.VISIBLE);
 
@@ -412,6 +433,7 @@ public class MobileVerifyActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
                         intent.putExtra("mobile_number", string_mobile_number);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                     } else {
@@ -491,4 +513,21 @@ public class MobileVerifyActivity extends AppCompatActivity {
         String OTP = String.format("%04d", random.nextInt(10000));
         return OTP;
     }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MobileVerifyActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+
 }
