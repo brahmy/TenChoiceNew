@@ -39,11 +39,11 @@ import java.util.Map;
 import java.util.Random;
 
 public class MobileVerifyActivity extends AppCompatActivity {
-    private EditText editText_mobile_number, editText_very_otp;
+    private EditText editText_mobile_number, editText_very_otp, editText_verify_pin;
     private TextView textView_forgot_pin;
-    private Button button_submit, button_otp_verify;
-    private LinearLayout linearLayout_mobile_number, linearLayout_verify_otp;
-    private String string_mobile_number, string_otp, OTP, string_Random_otp,string_pin;
+    private Button button_submit, button_otp_verify, button_pin_verify;
+    private LinearLayout linearLayout_mobile_number, linearLayout_verify_otp, linearLayout_verify_pin;
+    private String string_mobile_number, string_otp, OTP, string_Random_otp, string_pin;
 
     private Context context = MobileVerifyActivity.this;
     private boolean isExist;
@@ -67,12 +67,18 @@ public class MobileVerifyActivity extends AppCompatActivity {
         editText_mobile_number = findViewById(R.id.id_mobile_verify_mobile_number_edt);
         editText_very_otp = findViewById(R.id.id_mobile_verify_OTP_edt);
         button_submit = findViewById(R.id.id_mobile_verify_submit_btn);
-        button_otp_verify = findViewById(R.id.id_mobile_verify_confirm_btn);
+        button_otp_verify = findViewById(R.id.id_mobile_verify_confirm_otp_btn);
         linearLayout_mobile_number = findViewById(R.id.id_mobile_verify_LL);
         linearLayout_verify_otp = findViewById(R.id.id_mobile_verify_otp_LL);
-        textView_forgot_pin=findViewById(R.id.id_mobile_verify_forgot_pin_textView);
+        linearLayout_verify_pin = findViewById(R.id.id_mobile_verify_pin_LL);
+        button_pin_verify = findViewById(R.id.id_mobile_verify_confirm_btn);
+        editText_verify_pin = findViewById(R.id.id_mobile_verify_pin_edt);
+        textView_forgot_pin = findViewById(R.id.id_mobile_verify_forgot_pin_textView);
 
         textView_forgot_pin.setVisibility(View.GONE);
+
+        linearLayout_verify_otp.setVisibility(View.GONE);
+        linearLayout_verify_pin.setVisibility(View.GONE);
 
         if(loginSessionManager.isLoggedIn()) {
             // get user data from session
@@ -80,16 +86,12 @@ public class MobileVerifyActivity extends AppCompatActivity {
             // number
             string_mobile_number = user.get(LoginSessionManager.KEY_MOBILE_NUMBER);
 
-            linearLayout_verify_otp.setVisibility(View.VISIBLE);
-            button_otp_verify.setVisibility(View.VISIBLE);
-            button_submit.setVisibility(View.GONE);
-            linearLayout_mobile_number.setVisibility(View.GONE);
+            linearLayout_verify_pin.setVisibility(View.VISIBLE);
+           linearLayout_mobile_number.setVisibility(View.GONE);
 
         }else{
-            linearLayout_verify_otp.setVisibility(View.GONE);
-            button_otp_verify.setVisibility(View.GONE);
-            button_submit.setVisibility(View.VISIBLE);
-            linearLayout_mobile_number.setVisibility(View.VISIBLE);
+            linearLayout_verify_pin.setVisibility(View.GONE);
+           linearLayout_mobile_number.setVisibility(View.VISIBLE);
 
 
         }
@@ -132,14 +134,40 @@ public class MobileVerifyActivity extends AppCompatActivity {
 
         button_otp_verify.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 string_otp = editText_very_otp.getText().toString();
-                if (!TextUtils.isEmpty(string_otp)) {
+                if (OTP.equals(string_otp)) {
+
+                    if (isExist) {
+                        linearLayout_verify_otp.setVisibility(View.GONE);
+                        linearLayout_verify_pin.setVisibility(View.VISIBLE);
+                    } else {
+                        Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
+                        intent.putExtra("mobile_number", string_mobile_number);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+
+
+                } else {
+
+                    editText_very_otp.setError("OTP is Not Valid!");
+
+                }
+
+            }
+        });
+
+        button_pin_verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                string_pin = editText_verify_pin.getText().toString();
+                if (!TextUtils.isEmpty(string_pin)) {
                     dialogProgressBar.showDialog();
                     volleyVerifyPIN();
 
                 } else {
-                    editText_very_otp.setError("PIN is Not Valid!");
+                    editText_verify_pin.setError("PIN is Not Valid!");
                 }
 
             }
@@ -174,18 +202,18 @@ public class MobileVerifyActivity extends AppCompatActivity {
         View sheetView = getLayoutInflater().inflate(R.layout.forgot_pin_bottom_sheet, null);
         mBottomSheetDialog.setContentView(sheetView);
         mBottomSheetDialog.show();
-        final EditText editText_number=sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_mobile_number_editText);
+        final EditText editText_number = sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_mobile_number_editText);
         editText_number.setText(string_mobile_number);
-        Button button_continue=sheetView.findViewById(R.id.id_forgot_pin_continue_btn);
+        Button button_continue = sheetView.findViewById(R.id.id_forgot_pin_continue_btn);
         button_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String string_number=editText_number.getText().toString();
-                if(!TextUtils.isEmpty(string_number)) {
+                String string_number = editText_number.getText().toString();
+                if (!TextUtils.isEmpty(string_number)) {
                     dialogProgressBar.showDialog();
                     volleyVerifyMobileNumber(string_number);
-                }else{
-                    Toast.makeText(context,"Please Enter Mobile Number",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Please Enter Mobile Number", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -193,7 +221,7 @@ public class MobileVerifyActivity extends AppCompatActivity {
     }
 
     private void volleyVerifyMobileNumber(final String string_number) {
-        StringRequest stringRequest=new StringRequest(Request.Method.POST, URLUtility.VERIFY_NUMBER, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLUtility.VERIFY_NUMBER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 dialogProgressBar.hideDialog();
@@ -202,12 +230,12 @@ public class MobileVerifyActivity extends AppCompatActivity {
                     jsonObject = new JSONObject(response);
                     String string_response = jsonObject.getString("message");
                     if (string_response.equalsIgnoreCase("not exist")) {
-                        Toast.makeText(context,"Mobile Number is Not Valid",Toast.LENGTH_LONG).show();
-                    }else{
+                        Toast.makeText(context, "Mobile Number is Not Valid", Toast.LENGTH_LONG).show();
+                    } else {
                         openNewPINBottomSheetDialog(string_number);
                     }
 
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -219,11 +247,11 @@ public class MobileVerifyActivity extends AppCompatActivity {
                 Toast.makeText(context, "Sorry!Server error!!", Toast.LENGTH_LONG).show();
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params=new HashMap<>();
-                params.put("phone",string_number);
+                HashMap<String, String> params = new HashMap<>();
+                params.put("phone", string_number);
                 return params;
             }
         };
@@ -237,44 +265,44 @@ public class MobileVerifyActivity extends AppCompatActivity {
         View sheetView = getLayoutInflater().inflate(R.layout.new_pin_bottom_sheet, null);
         mBottomSheetDialog.setContentView(sheetView);
         mBottomSheetDialog.show();
-        final EditText editText_new_pin=sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_create_pin_editText);
-        final EditText editText_re_new_pin=sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_recreate_pin_editText);
-        Button button_change=sheetView.findViewById(R.id.id_new_pin_change_btn);
+        final EditText editText_new_pin = sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_create_pin_editText);
+        final EditText editText_re_new_pin = sheetView.findViewById(R.id.id_forgot_pin_bottom_sheet_recreate_pin_editText);
+        Button button_change = sheetView.findViewById(R.id.id_new_pin_change_btn);
 
         button_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!TextUtils.isEmpty(editText_new_pin.getText().toString())&& !TextUtils.isEmpty(editText_re_new_pin.getText())){
-                    if(editText_new_pin.getText().toString().contains(editText_re_new_pin.getText().toString())) {
+                if (!TextUtils.isEmpty(editText_new_pin.getText().toString()) && !TextUtils.isEmpty(editText_re_new_pin.getText())) {
+                    if (editText_new_pin.getText().toString().contains(editText_re_new_pin.getText().toString())) {
                         dialogProgressBar.showDialog();
-                        ChangePIN(editText_new_pin.getText().toString(),mobile_number);
-                    }else{
-                        Toast.makeText(context,"PIN Does Not Matched",Toast.LENGTH_LONG).show();
+                        ChangePIN(editText_new_pin.getText().toString(), mobile_number);
+                    } else {
+                        Toast.makeText(context, "PIN Does Not Matched", Toast.LENGTH_LONG).show();
 
                     }
 
-                }else{
-                    Toast.makeText(context,"Please Enter Fields",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Please Enter Fields", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     private void ChangePIN(final String new_pin, final String string_mobile_number) {
-        StringRequest stringRequest=new StringRequest(Request.Method.POST, URLUtility.CHANGE_PIN, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLUtility.CHANGE_PIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 dialogProgressBar.hideDialog();
-                System.out.println("verify_pin"+response);
+                System.out.println("verify_pin" + response);
                 try {
-                    JSONObject jsonObject=new JSONObject(response);
-                    String response_status=jsonObject.getString("message");
-                    if(response_status.contains("Successfully Updated")){
-                        Toast.makeText(context,"PIN Changed Successfully",Toast.LENGTH_LONG).show();
-                        Intent intent=new Intent(context,MobileVerifyActivity.class);
+                    JSONObject jsonObject = new JSONObject(response);
+                    String response_status = jsonObject.getString("message");
+                    if (response_status.contains("Successfully Updated")) {
+                        Toast.makeText(context, "PIN Changed Successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(context, MobileVerifyActivity.class);
                         startActivity(intent);
-                    }else{
-                        Toast.makeText(context,"PIN Changed Successfully",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(context, "PIN Changed Successfully", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
@@ -290,12 +318,12 @@ public class MobileVerifyActivity extends AppCompatActivity {
                 Toast.makeText(context, "Sorry!Server error!!", Toast.LENGTH_LONG).show();
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params=new HashMap<>();
-                params.put("phone",string_mobile_number);
-                params.put("mpin",new_pin);
+                HashMap<String, String> params = new HashMap<>();
+                params.put("phone", string_mobile_number);
+                params.put("mpin", new_pin);
                 return params;
             }
         };
@@ -304,22 +332,22 @@ public class MobileVerifyActivity extends AppCompatActivity {
     }
 
     private void volleyVerifyPIN() {
-        StringRequest stringRequest=new StringRequest(Request.Method.POST, URLUtility.PIN_VERIFY_NUMBER, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLUtility.PIN_VERIFY_NUMBER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 dialogProgressBar.hideDialog();
-                System.out.println("verify_pin"+response);
+                System.out.println("verify_pin" + response);
                 try {
-                    JSONObject jsonObject=new JSONObject(response);
-                    String response_status=jsonObject.getString("message");
-                    if(response_status.contains("mpin is valid")){
+                    JSONObject jsonObject = new JSONObject(response);
+                    String response_status = jsonObject.getString("message");
+                    if (response_status.contains("mpin is valid")) {
 //                            if(isExist) {
-                                Intent intent = new Intent(MobileVerifyActivity.this, HomeLoanMainActivity.class);
-                                intent.putExtra("mobile_number", string_mobile_number);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
+                        Intent intent = new Intent(MobileVerifyActivity.this, HomeLoanMainActivity.class);
+                        intent.putExtra("mobile_number", string_mobile_number);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
 //                            }
-                    }else{
+                    } else {
                         textView_forgot_pin.setVisibility(View.VISIBLE);
 
                     }
@@ -337,12 +365,13 @@ public class MobileVerifyActivity extends AppCompatActivity {
                 Toast.makeText(context, "Sorry!Server error!!", Toast.LENGTH_LONG).show();
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params=new HashMap<>();
-                params.put("phone",string_mobile_number);
-                params.put("mpin",string_otp);
+                HashMap<String, String> params = new HashMap<>();
+                params.put("phone", string_mobile_number);
+                params.put("mpin", string_pin);
+                System.out.println("params"+params);
                 return params;
             }
         };
@@ -423,13 +452,10 @@ public class MobileVerifyActivity extends AppCompatActivity {
                         isExist = false;
                         dialogProgressBar.hideDialog();
 
-/*
                         linearLayout_verify_otp.setVisibility(View.GONE);
-                        button_otp_verify.setVisibility(View.GONE);
 
                         linearLayout_mobile_number.setVisibility(View.GONE);
-                        button_submit.setVisibility(View.GONE);
-*/
+                        linearLayout_verify_pin.setVisibility(View.GONE);
 
                         Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
                         intent.putExtra("mobile_number", string_mobile_number);
@@ -441,11 +467,10 @@ public class MobileVerifyActivity extends AppCompatActivity {
 
                         loginSessionManager.createLoginSession(string_mobile_number);
                         isExist = true;
-                        linearLayout_verify_otp.setVisibility(View.VISIBLE);
-                        button_otp_verify.setVisibility(View.VISIBLE);
 
+                        linearLayout_verify_otp.setVisibility(View.GONE);
                         linearLayout_mobile_number.setVisibility(View.GONE);
-                        button_submit.setVisibility(View.GONE);
+                        linearLayout_verify_pin.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -493,15 +518,18 @@ public class MobileVerifyActivity extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                //User=crest&passwd=crest@123&mtype=N&Language=English&sid=crest&mobilenumber=9493302738&Message=Your+One+Time+Password+is%3A46351056
                 HashMap<String, String> params = new HashMap<>();
-                params.put("User", "crest");
-                params.put("passwd", "crest@123");
-                params.put("mtype", "N");
+
+//                http://173.249.7.230/api/mt/SendSMS?user=demo&password=demo123&senderid=WEBSMS&channel=Promo&DCS=0&flashsms=0&number=91989xxxxxxx&text=test message&route=##
+                params.put("user", "vmrit");
+                params.put("password", "7675076975");
                 params.put("Language", "English");
-                params.put("sid", "crest");
-                params.put("mobilenumber", string_mobile_number);
-                params.put("Message", "Your OTP Here " + OTP + " .Please Don't Share with other");
+                params.put("senderid", "TENCHC");
+                params.put("channel", "Trans");
+                params.put("DCS","0");
+                params.put("flashsms","0");
+                params.put("number", string_mobile_number);
+                params.put("text", "Your OTP Here " + OTP + " .Please Don't Share with other");
                 return params;
             }
         };

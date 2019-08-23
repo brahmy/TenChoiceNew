@@ -294,7 +294,7 @@ public class KYCActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialogProgressBar.hideDialog();
-                System.out.println("KYC_error" + error.getLocalizedMessage());
+                System.out.println("KYC_error" + error.networkResponse);
                 Toast.makeText(context, "Sorry!Server Error!!", Toast.LENGTH_LONG).show();
             }
         }) {

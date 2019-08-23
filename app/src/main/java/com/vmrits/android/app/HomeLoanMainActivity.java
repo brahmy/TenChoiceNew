@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class HomeLoanMainActivity extends AppCompatActivity {
     protected DialogProgressBar dialogProgressBar;
     private String string_mobile_number;
     private LoginSessionManager loginSessionManager;
+    private LinearLayout linearLayout_home,linearLayout_history,linearLayout_profile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,9 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView_home_loan_main.setLayoutManager(layoutManager);
+        linearLayout_home=findViewById(R.id.id_home_loan_main_home_ll);
+        linearLayout_history=findViewById(R.id.id_home_loan_main_history_ll);
+        linearLayout_profile=findViewById(R.id.id_home_loan_main_profile_ll);
 
         dialogProgressBar.showDialog();
 
@@ -96,6 +101,22 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
             }
         }));
+        linearLayout_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent=new Intent(context,TransactionHistory.class);
+                startActivity(intent);
+            }
+        });
+        linearLayout_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context,ProfileActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void volleyPaymentStatus() {

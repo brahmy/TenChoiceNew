@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -47,26 +48,62 @@
                             android:maxLength="10"
                             android:id="@+id/id_mobile_verify_mobile_number_edt" />
                     </android.support.design.widget.TextInputLayout>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Submit"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:textAllCaps="false"
+                        android:background="@drawable/button_border"
+                        android:textColor="@android:color/white"
+                        android:padding="5dp"
+                        android:textSize="@dimen/button_size"
+                        android:id="@+id/id_mobile_verify_submit_btn" />
 
                 </LinearLayout>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Submit"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:textAllCaps="false"
-                    android:background="@drawable/button_border"
-                    android:textColor="@android:color/white"
-                    android:padding="5dp"
-                    android:textSize="@dimen/button_size"
-                    android:id="@+id/id_mobile_verify_submit_btn" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/id_mobile_verify_otp_LL">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter OTP"
+                        app:passwordToggleEnabled="true"
+                        android:textColorHint="@color/purple">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberPassword"
+                            android:maxLength="6"
+                            android:id="@+id/id_mobile_verify_OTP_edt" />
+                    </android.support.design.widget.TextInputLayout>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Confirm"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:textAllCaps="false"
+                        android:background="@drawable/button_border"
+                        android:textColor="@android:color/white"
+                        android:padding="5dp"
+                        android:textSize="@dimen/button_size"
+                        android:id="@+id/id_mobile_verify_confirm_otp_btn" />
+
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/id_mobile_verify_pin_LL">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -80,22 +117,22 @@
                             android:layout_height="wrap_content"
                             android:inputType="numberPassword"
                             android:maxLength="6"
-                            android:id="@+id/id_mobile_verify_OTP_edt" />
+                            android:id="@+id/id_mobile_verify_pin_edt" />
                     </android.support.design.widget.TextInputLayout>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Confirm"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:textAllCaps="false"
+                        android:background="@drawable/button_border"
+                        android:textColor="@android:color/white"
+                        android:padding="5dp"
+                        android:textSize="@dimen/button_size"
+                        android:id="@+id/id_mobile_verify_confirm_btn" />
 
                 </LinearLayout>
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Confirm"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:textAllCaps="false"
-                    android:background="@drawable/button_border"
-                    android:textColor="@android:color/white"
-                    android:padding="5dp"
-                    android:textSize="@dimen/button_size"
-                    android:id="@+id/id_mobile_verify_confirm_btn" />
 
                 <TextView
                     android:layout_width="match_parent"

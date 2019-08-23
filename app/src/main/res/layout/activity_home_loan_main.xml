@@ -23,7 +23,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:id="@+id/id_home_loan_main_home_ll">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -41,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerHorizontal="true"
-                android:gravity="center">
+                android:gravity="center"
+                android:id="@+id/id_home_loan_main_history_ll">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_alignParentEnd="true"
-                android:gravity="center">
+                android:gravity="center"
+                android:id="@+id/id_home_loan_main_profile_ll">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

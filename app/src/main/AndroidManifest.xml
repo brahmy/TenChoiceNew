@@ -51,6 +51,8 @@
         <activity android:name=".PaymentActivity" />
         <activity android:name=".RePayActivity" />
         <activity android:name=".BankDetailsActivity" />
+        <activity android:name=".TransactionHistory"/>
+        <activity android:name=".ProfileActivity"/>
     </application>
 
 </manifest>
