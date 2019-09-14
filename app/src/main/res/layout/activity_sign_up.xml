@@ -32,6 +32,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/margin_five"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawableTint="@android:color/black"
                         android:drawableStart="@drawable/ic_full_name_icon"
                         android:id="@+id/id_activity_sign_in_one_full_name_edt" />
@@ -48,6 +50,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/margin_five"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawableTint="@color/black"
                         android:drawableStart="@drawable/ic_father_icon"
                         android:id="@+id/id_activity_sign_in_one_father_name" />
@@ -65,6 +69,8 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/margin_five"
                         android:drawableTint="@color/black"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawableStart="@drawable/ic_mother_icon"
                         android:id="@+id/id_activity_sign_in_one_mother_name" />
                 </android.support.design.widget.TextInputLayout>
@@ -151,6 +157,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="top"
                         android:singleLine="false"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawablePadding="@dimen/margin_five"
                         android:drawableTint="@color/black"
                         android:drawableStart="@drawable/ic_salary_icon"
@@ -169,6 +177,8 @@
                         android:layout_height="100dp"
                         android:gravity="bottom"
                         android:singleLine="false"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawableTint="@color/black"
                         android:drawablePadding="@dimen/margin_five"
                         android:id="@+id/id_activity_sign_in_one_present_address_edt" />
@@ -194,6 +204,8 @@
                         android:layout_height="100dp"
                         android:gravity="bottom"
                         android:singleLine="false"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:drawableTint="@color/black"
                         android:drawablePadding="@dimen/margin_five"
                         android:id="@+id/id_activity_sign_in_one_perminent_address_edt" />
@@ -212,6 +224,7 @@
                         android:inputType="numberPassword"
                         android:drawableStart="@drawable/ic_pin_lock"
                         android:drawablePadding="5dp"
+                        android:imeOptions="actionNext"
                         android:maxLength="6"
                         android:id="@+id/id_activity_sign_in_pin_editText"/>
                 </android.support.design.widget.TextInputLayout>
@@ -227,6 +240,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number|numberPassword"
+                        android:imeOptions="actionDone"
                         android:drawableStart="@drawable/ic_pin_lock"
                         android:drawablePadding="5dp"
                         android:maxLength="6"
