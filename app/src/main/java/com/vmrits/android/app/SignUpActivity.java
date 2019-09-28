@@ -48,12 +48,15 @@ public class SignUpActivity extends AppCompatActivity {
     private DatePickerDialog mDatePickerDialog;
     private Context context = SignUpActivity.this;
     private LoginSessionManager loginSessionManager;
+    private DialogProgressBar dialogProgressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         loginSessionManager = new LoginSessionManager(getApplicationContext());
+        dialogProgressBar=new DialogProgressBar(context);
+        dialogProgressBar.dialogInit();
 
         Intent intent = getIntent();
         intent_mobile_number = intent.getStringExtra("mobile_number");
@@ -164,6 +167,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(string_full_name) && !TextUtils.isEmpty(string_father_name) && !TextUtils.isEmpty(string_mother_name)
                         && !TextUtils.isEmpty(string_dob) && !TextUtils.isEmpty(string_present_address) && !TextUtils.isEmpty(string_mobile_number)) {
                     if(editText_pin.getText().toString().contains(editText_re_create_pin.getText().toString())) {
+                        dialogProgressBar.showDialog();
                         volleySignUp();
                     }else {
                         Toast.makeText(context, "Entered pin not matched!!", Toast.LENGTH_LONG).show();
@@ -180,6 +184,7 @@ public class SignUpActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLUtility.SIGN_UP, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                dialogProgressBar.hideDialog();
                 System.out.println("sing_up_response" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -202,6 +207,7 @@ public class SignUpActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                dialogProgressBar.hideDialog();
                 System.out.println("sing_up_error" + error.getMessage());
                 Toast.makeText(context, "Sorry!Server Connection Failed!!", Toast.LENGTH_LONG).show();
             }

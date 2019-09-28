@@ -116,7 +116,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberPassword"
-                            android:maxLength="6"
+                            android:maxLength="4"
                             android:id="@+id/id_mobile_verify_pin_edt" />
                     </android.support.design.widget.TextInputLayout>
                     <Button

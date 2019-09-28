@@ -69,6 +69,7 @@ public class HomeLoanMainActivity extends AppCompatActivity {
         dialogProgressBar.showDialog();
 
         volleyPaymentStatus();
+//        uploadDocsStatus();
 
 
         onClickListener();
@@ -117,6 +118,30 @@ public class HomeLoanMainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void uploadDocsStatus(){
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, URLUtility.DOCUMENT_STATUS, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                System.out.println("responsedocs"+s);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("Server_Error"+volleyError.networkResponse);
+                Toast.makeText(context, "Sorry!Server error!!", Toast.LENGTH_LONG).show();
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params=new HashMap<>();
+                params.put("phone",string_mobile_number);
+                return params;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(stringRequest,"docs_staus");
     }
 
     private void volleyPaymentStatus() {

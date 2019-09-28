@@ -12,9 +12,11 @@ public class URLUtility {
     public static final String REFERENCE_DETAILS = URL + "reference_details.php";
     public static final String AMOUNT_LIST = URL + "amount_list.php";
     public static final String PAYMENT_STATUS = URL + "repayment.php";
-    public static final String REPAYMENT_STATUS = URL + "payment.php";
+    public static final String DOCUMENT_STATUS = URL + "payment.php";
 //    public static final String GENERATE_OTP_ = "http://sms.smswalk.info/WebserviceSMS.aspx?";
-    public static final String GENERATE_OTP_ = "http://173.249.7.230/api/mt/SendSMS?";
+//    public static final String GENERATE_OTP_ = "http://173.249.7.230/api/mt/SendSMS?";
+    public static final String GENERATE_OTP_ = URL+"otp.php";
+
     public static final String REPAYMENT_DETAILS = URL + "repayment_details.php";
     public static final String TRANSACTION_PAYMENT_STATUS = URL + "payment1.php";
     public static final String CHECK_DETAILS_SUBMITTED = URL + "conditions.php";

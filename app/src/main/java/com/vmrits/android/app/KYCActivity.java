@@ -21,7 +21,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.view.Window;
@@ -55,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -139,8 +143,18 @@ public class KYCActivity extends AppCompatActivity {
 
 //                request();
 
-                    dialogProgressBar.showDialog();
-                    volleyKYCRequest();
+                    if(isPANValid() && validateAadharNumber(editText_aadhaar_number.getText().toString())) {
+                        dialogProgressBar.showDialog();
+                        volleyKYCRequest();
+                    }else{
+                        if(!isPANValid()){
+                            editText_pan_number.setError("PAN is Invalid");
+
+                        }else if(!validateAadharNumber(editText_aadhaar_number.getText().toString())){
+                            editText_pan_number.setError("AADHAAR is Invalid");
+
+                        }
+                    }
 /*
                 Intent intent=new Intent(context,ReferenceActivity.class);
                 startActivity(intent);
@@ -240,6 +254,64 @@ public class KYCActivity extends AppCompatActivity {
 
             }
         });
+        TextWatcher textWatcher=new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                editText_pan_number.setError("");
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
+        editText_pan_number.addTextChangedListener(textWatcher);
+        TextWatcher textWatcher_aadhaar=new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                editText_aadhaar_number.setError("");
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
+        editText_aadhaar_number.addTextChangedListener(textWatcher_aadhaar);
+
+    }
+    public static boolean validateAadharNumber(String aadharNumber){
+        Pattern aadharPattern = Pattern.compile("\\d{12}");
+        boolean isValidAadhar = aadharPattern.matcher(aadharNumber).matches();
+        if(isValidAadhar){
+            isValidAadhar = AadhaarValidation.validateVerhoeff(aadharNumber);
+        }
+        return isValidAadhar;
+    }
+    private boolean isPANValid(){
+        Pattern pattern = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}");
+
+        Matcher matcher = pattern .matcher(editText_pan_number.getText().toString());
+
+        if (matcher .matches()) {
+            return true;
+//            Toast.makeText(getApplicationContext(),"PAN is Matching", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            return false;
+//            Toast.makeText(getApplicationContext(), "PAN is Not Matching", Toast.LENGTH_LONG).show();
+        }
     }
 
     private File convertBitmapToFile(Bitmap bitmap) {

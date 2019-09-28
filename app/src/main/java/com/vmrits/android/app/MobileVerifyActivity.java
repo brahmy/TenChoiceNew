@@ -87,7 +87,9 @@ public class MobileVerifyActivity extends AppCompatActivity {
             string_mobile_number = user.get(LoginSessionManager.KEY_MOBILE_NUMBER);
 
             linearLayout_verify_pin.setVisibility(View.VISIBLE);
-           linearLayout_mobile_number.setVisibility(View.GONE);
+            linearLayout_mobile_number.setVisibility(View.GONE);
+
+            volleyVerifyMobileRequest();
 
         }else{
             linearLayout_verify_pin.setVisibility(View.GONE);
@@ -181,7 +183,7 @@ public class MobileVerifyActivity extends AppCompatActivity {
         TextWatcher textWatcher1 = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                editText_very_otp.setError(null);
+                editText_very_otp.setError("");
             }
 
             @Override
@@ -231,8 +233,10 @@ public class MobileVerifyActivity extends AppCompatActivity {
                     String string_response = jsonObject.getString("message");
                     if (string_response.equalsIgnoreCase("not exist")) {
                         Toast.makeText(context, "Mobile Number is Not Valid", Toast.LENGTH_LONG).show();
+                        LoginSession.setIsvalidUser("false");
                     } else {
                         openNewPINBottomSheetDialog(string_number);
+                        LoginSession.setIsvalidUser("true");
                     }
 
                 } catch (JSONException e) {
@@ -340,17 +344,27 @@ public class MobileVerifyActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String response_status = jsonObject.getString("message");
-                    if (response_status.contains("mpin is valid")) {
+                        if (response_status.contains("mpin is valid")) {
 //                            if(isExist) {
-                        Intent intent = new Intent(MobileVerifyActivity.this, HomeLoanMainActivity.class);
-                        intent.putExtra("mobile_number", string_mobile_number);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                            Intent intent = new Intent(MobileVerifyActivity.this, HomeLoanMainActivity.class);
+                            intent.putExtra("mobile_number", string_mobile_number);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
 //                            }
-                    } else {
-                        textView_forgot_pin.setVisibility(View.VISIBLE);
+                        } else {
+                            if(LoginSession.getIsvalidUser().equals("true")) {
 
-                    }
+                                textView_forgot_pin.setVisibility(View.VISIBLE);
+
+                        }else{
+                                Toast.makeText(context,"Mobile number is not valid! Login again!!",Toast.LENGTH_LONG).show();
+                                linearLayout_verify_otp.setVisibility(View.GONE);
+                                linearLayout_mobile_number.setVisibility(View.VISIBLE);
+                                linearLayout_verify_pin.setVisibility(View.GONE);
+
+                            }
+
+                }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -452,21 +466,20 @@ public class MobileVerifyActivity extends AppCompatActivity {
                         isExist = false;
                         dialogProgressBar.hideDialog();
 
-                        linearLayout_verify_otp.setVisibility(View.GONE);
+                        linearLayout_verify_otp.setVisibility(View.VISIBLE);
 
                         linearLayout_mobile_number.setVisibility(View.GONE);
                         linearLayout_verify_pin.setVisibility(View.GONE);
 
-                        Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
-                        intent.putExtra("mobile_number", string_mobile_number);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        volleyOTPRequest();
+
 
                     } else {
                         dialogProgressBar.hideDialog();
 
                         loginSessionManager.createLoginSession(string_mobile_number);
                         isExist = true;
+                        LoginSession.setIsvalidUser("true");
 
                         linearLayout_verify_otp.setVisibility(View.GONE);
                         linearLayout_mobile_number.setVisibility(View.GONE);
@@ -497,6 +510,47 @@ public class MobileVerifyActivity extends AppCompatActivity {
         };
         AppController.getInstance().addToRequestQueue(stringRequest, "verify_number");
 
+    }
+
+    private void volleyOTPRequest() {
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, URLUtility.GENERATE_OTP_, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println("responseOTP"+response);
+                try {
+                    JSONArray jsonArray=new JSONArray(response);
+                    JSONObject jsonObject=jsonArray.getJSONObject(0);
+                    OTP=jsonObject.getString("otp");
+/*
+                    if(!TextUtils.isEmpty(string_otp)){
+                        Intent intent = new Intent(MobileVerifyActivity.this, SignUpActivity.class);
+                        intent.putExtra("mobile_number", string_mobile_number);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                    }
+*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(context, "OTP sent! Please Enter It!!", Toast.LENGTH_LONG).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Sorry!Server error!!", Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params=new HashMap<>();
+                params.put("phone",string_mobile_number);
+                return params;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(stringRequest,"OTP_REQUEST");
     }
 
     private void generateOTP() {

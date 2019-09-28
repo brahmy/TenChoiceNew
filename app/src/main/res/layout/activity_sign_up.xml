@@ -213,7 +213,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Create 6 Digit PIN"
+                    android:hint="Create 4 Digit PIN"
                     android:layout_marginTop="5dp"
                     android:textColorHint="@color/black"
                     app:passwordToggleEnabled="true"
@@ -225,13 +225,13 @@
                         android:drawableStart="@drawable/ic_pin_lock"
                         android:drawablePadding="5dp"
                         android:imeOptions="actionNext"
-                        android:maxLength="6"
+                        android:maxLength="4"
                         android:id="@+id/id_activity_sign_in_pin_editText"/>
                 </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="ReCreate 6 Digit PIN"
+                    android:hint="ReCreate 4 Digit PIN"
                     android:layout_marginTop="5dp"
                     app:passwordToggleEnabled="true"
                     android:textColorHint="@color/black"
@@ -243,7 +243,7 @@
                         android:imeOptions="actionDone"
                         android:drawableStart="@drawable/ic_pin_lock"
                         android:drawablePadding="5dp"
-                        android:maxLength="6"
+                        android:maxLength="4"
                         android:id="@+id/id_activity_sign_in_re_pin_editText"/>
                 </android.support.design.widget.TextInputLayout>
 
